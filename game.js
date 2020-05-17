@@ -251,7 +251,7 @@ let heroY = 322;
 let foodX = Math.round(Math.random()*(canvas.width - 32));
 let foodY = 70 + Math.round(Math.random()*(canvas.height - 172));
 
-let brickX = Math.round(Math.random()*(canvas.width - 120)); // 
+let brickX = 1000 + Math.round(Math.random()*(canvas.width - 120)); // 
 let brickY = 368;
 
 let brick2X = 1200;
@@ -385,6 +385,7 @@ function checkAllObstacles() {
 // music
 
 let music = new Audio("audio/8bitattempt.ogg");
+music.play();
 function playMusic() {
   music.addEventListener('ended', function() {
     this.currentTime = 0;
@@ -399,6 +400,12 @@ function pauseMusic() {
 // reset
 
 function reset() {
+foodX = 1000 + Math.round(Math.random()*(canvas.width - 32));
+foodY = 70 + Math.round(Math.random()*(canvas.height - 172));
+brickX = 1000 + Math.round(Math.random()*(canvas.width - 120)); // 
+ brickY = 368;
+ brick2X = 1200;
+ brick2Y = Math.round(Math.random()*(canvas.height - 120))
   heroX = 50;
   heroY = 322;
   score = 0;
