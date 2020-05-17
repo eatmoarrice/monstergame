@@ -255,7 +255,8 @@ let brickX = 1000 + Math.round(Math.random()*(canvas.width - 120)); //
 let brickY = 368;
 
 let brick2X = 1200;
-let brick2Y = Math.round(Math.random()*(canvas.height - 120))
+let brick2Y = 48 + Math.round(Math.random() * 5) * 64;
+
 
 /** 
  * Keyboard Listeners
@@ -340,21 +341,40 @@ function checkObstacle(x,width,y,height) {
     // }
   
   
+       // up obstacle
+       if (y <= heroY + hero.height && y + height > heroY + hero.height ) {
+        if (( x < heroX && x + width > heroX ) || (x < heroX + hero.width && x > heroX) ) {
+          tempDown = false;
+          if (heroY + hero.height > y) {heroY = y - hero.height + 1; tempRight = true; tempLeft = true;}
+        }
+        else {tempDown = true;}
+      }
+      else {tempDown = true;}
   
+      // down obstacle
+      if (y + height >= heroY && y < heroY ) {
+        if (( x  < heroX && x + width > heroX ) || (x < heroX + hero.width && x > heroX) ) {
+          tempUp = false;
+          
+        }
+        else {tempUp = true;}
+      }
+      else {tempUp = true;}
 
-  if (((x < heroX) && (heroX < x + width)) || ((x < heroX + hero.width) && (heroX + hero.width < x + width))) {
-    if ((y < heroY) && (heroY <= y + height)) {tempUp = false}
-    else {tempUp = true};
-    if ((y < heroY + hero.height) && (heroY + hero.height < y + height)) {
-      tempDown = false;
-      if (heroY + hero.height > y) {heroY = y - hero.height + 1; tempRight = true; tempLeft = true;}
-    }
-    else {tempDown = true};
-  }
-  else {
-    tempUp = true;
-    tempDown = true;
-  }
+  // if (((x < heroX) && (heroX < x + width)) || ((x < heroX + hero.width) && (heroX + hero.width < x + width))) {
+  //   if ((y < heroY) && (heroY <= y + height)) {tempUp = false}
+  //   else {tempUp = true};
+  //   if ((y < heroY + hero.height) && (heroY + hero.height < y + height)) {
+  //     tempDown = false;
+  //     if (heroY + hero.height > y) {heroY = y - hero.height + 1; tempRight = true; tempLeft = true;}
+  //   }
+  //   else {tempDown = true};
+  // }
+  // else {
+  //   tempUp = true;
+  //   tempDown = true;
+  // }
+
   if (heroY >= 322) {tempDown = false;}
   let array = [tempLeft, tempRight, tempUp, tempDown];
   return array;
@@ -384,8 +404,7 @@ function checkAllObstacles() {
 
 // music
 
-let music = new Audio("audio/8bitattempt.ogg");
-music.play();
+let music = new Audio("audio/8bitattempt.ogg"); 
 function playMusic() {
   music.addEventListener('ended', function() {
     this.currentTime = 0;
@@ -405,7 +424,7 @@ foodY = 70 + Math.round(Math.random()*(canvas.height - 172));
 brickX = 1000 + Math.round(Math.random()*(canvas.width - 120)); // 
  brickY = 368;
  brick2X = 1200;
- brick2Y = Math.round(Math.random()*(canvas.height - 120))
+ brick2Y = 48 + Math.round(Math.random() * 5) * 64;
   heroX = 50;
   heroY = 322;
   score = 0;
@@ -548,9 +567,9 @@ let update = function () {
 
   brick2X -= 5;
   if (brick2X <= -300) {
-    brick2Y = Math.round(Math.random()*(canvas.height - 120))
+    brick2Y = 48 + Math.round(Math.random() * 5) * 64;
     while (brick2Y < brickY && brick2Y + 64 > brickY) {
-      brick2Y = Math.round(Math.random()*(canvas.height - 120))
+      brick2Y = 48 + Math.round(Math.random() * 5) * 64;
     }
     brick2X = 1200;
   }
