@@ -1,0 +1,96 @@
+#canvas {
+    border: 5px solid brown;
+    /* padding: 0;
+    margin: auto;
+    display: block; */
+}
+
+.control {
+    width: 200px;
+    height: 510px;
+    color: white;
+    padding: 10px;
+    border: 5px solid brown;
+    border-right: 0;
+    background: rgb(34,34,34);
+    background: linear-gradient(180deg, rgba(34,34,34,1) 0%, rgba(88,88,88,1) 49%, rgba(0,0,0,1) 100%);
+}
+
+/* .control * {
+    margin-top: 20px;
+    margin-bottom: 70px;
+} */
+
+.right * {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.item2 {
+    margin-bottom: 50px;
+}
+
+.right {
+    position: absolute;
+    left: 1205px;
+    top: 56px;
+    color: white;
+    width: 200px;
+    height: 510px;
+    padding: 10px;
+    border: 5px solid brown;
+    background: rgb(34,34,34);
+    background: linear-gradient(180deg, rgba(34,34,34,1) 0%, rgba(88,88,88,1) 49%, rgba(0,0,0,1) 100%);
+}
+
+
+.title {
+    margin-left: 450px;
+    color: white;
+    text-shadow: -2px -2px 0 rgb(253, 255, 114), 2px -2px 0 rgb(75, 54, 35), -2px 2px 0 rgb(110, 41, 13), 2px 2px 0 rgb(37, 37, 36);
+    
+}
+
+body {
+    background-color: rgb(7, 6, 10);
+}
+
+#resetbutton {
+    border: 0;
+    border-radius: 20px;
+    padding: 10px;
+    background-color: crimson;
+    color: white;
+    font-weight: 600;
+    transition-duration: 0.3s;
+    filter: drop-shadow(4px 4px 4px #161616);
+}
+
+#resetbutton:hover {
+    transition-duration: 0.3s;
+    background-color: rgb(219, 75, 75);
+}
+
+#scorekeeper {
+    margin-top: 20px;
+    margin-bottom: 0px;
+    font-weight: 600;
+    font-size: 30px;
+    color: yellowgreen;
+}
+
+#time {
+    margin-top: 20px;
+    margin-bottom: 0px;
+    font-weight: 600;
+    font-size: 30px;
+    color: burlywood;
+}
+
+#highscore {
+    margin-top: 20px;
+    margin-bottom: 0px;
+    font-weight: 600;
+    font-size: 30px;
+    color: yellow;
+}

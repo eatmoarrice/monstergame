@@ -1,10 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Best Game Ever!</title>
-  </head>
-  <body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+  <title>EAT ALL THE THINGS!</title>
+</head>
+<body>
+  <h1 class="title">EAT UNTIL YOU CAN'T WALK!</h1>
+  <div class="d-inline-block align-top">
+    <div class="control d-flex justify-content-around flex-column align-items-center">
+      <div>
+        <button id="resetbutton" onclick="reset()">Play Again</button>
+      </div>
+      <div>
+        <button id="musicon">on</button>
+        <button id="musicoff">off</button>
+      </div>
+      <h5>Good luck!</h5>
+    </div>
+    <div>
+      <canvas id="canvas" class="d-inline-block"></canvas>
+    </div>
+    
+      <div class="right control d-flex  flex-column align-items-center">
+        <h5 class="item1">Score: <div class="text-center" id="scorekeeper">0</div></h5>
+        <h5 class="item2">Time: <div class="text-center" id="time">0</div></h5>
+        <h5 class="item3">High Score: <div class="text-center" id="highscore">0</div></h5>
+      </div> 
+  
+    
     <script src="game.js"></script>
-  </body>
+</body>
 </html>

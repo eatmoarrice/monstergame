@@ -14,12 +14,13 @@ let canvas;
 let hero = {width:80, height: 110}
 let ctx;
 
-canvas = document.createElement("canvas");
+canvas = document.getElementById("canvas");
 ctx = canvas.getContext("2d");
 canvas.width = 1000;
 canvas.height = 500;
 document.body.appendChild(canvas);
 
+let score = 0;
 let bgReady, heroReady, foodReady, brickReady, brick2Image, brick2Ready;
 let bgImage, heroImage, foodImage, brickImage;
 let bg2Image, bg3Image, bg4Image, bg5Image, bg6Image, bg7Image, bg3Ready, bg4Ready, bg5Ready, bg6Ready, bg7Ready;
@@ -248,7 +249,7 @@ let heroX = 50;
 let heroY = 322;
 
 let foodX = Math.round(Math.random()*(canvas.width - 32));
-let foodY = Math.round(Math.random()*(canvas.height -32));
+let foodY = 70 + Math.round(Math.random()*(canvas.height - 172));
 
 let brickX = Math.round(Math.random()*(canvas.width - 120)); // 
 let brickY = 368;
@@ -381,6 +382,19 @@ function checkAllObstacles() {
   }
 }
 
+// reset
+
+function reset() {
+  heroX = 50;
+  heroY = 322;
+  score = 0;
+  startTime = Date.now();
+  elapsedTime = 0;
+  document.getElementById("scorekeeper").innerHTML = 0;
+  document.getElementById("time").innerHTML = 0;
+  gameovercheck = false;
+}
+
 /**
  *  Update game objects - change player position based on key pressed
  *  and check to see if the food has been caught!
@@ -395,6 +409,7 @@ let bg4X = 0;
 let bg3X = 0;
 let tree1X = 0;
 let tree2X = 0;
+let highscore = 0;
 
 let update = function () {
   // Update the time.
@@ -403,7 +418,8 @@ let update = function () {
   let o1 = checkObstacle(brickX, 256, brickY, 64);
   let o2 = checkObstacle(brick2X, 64, brick2Y, 64);
   checkAllObstacles(o1,o2);
-  if (40 in keysDown) { // Player is holding down key
+
+  if (gameovercheck == false) {if (40 in keysDown) { // Player is holding down key
     userTyped = true;
     heroDirection = "down";
      }
@@ -426,7 +442,8 @@ let update = function () {
   if (38 in keysDown) { // Player is holding up key
     userTyped = true;
     heroDirection = "up";
-  }
+  }}
+  
   // else {heroDirection =""}
 
   // Check if player and food collided. O
@@ -438,6 +455,8 @@ let update = function () {
       && heroY <= (foodY + hero.height)
       && foodY <= (heroY + hero.height)
     ) {
+      score += 1;
+      document.getElementById("scorekeeper").innerHTML = score;
       // Pick a new location for the food.
       // Note: Change this to place the food at a new, random location.
       foodX = 1200;
@@ -460,8 +479,16 @@ let update = function () {
  
   };
 
-  if (heroX <= -150) {
+  function gameoverclear() {
     gameovercheck = true;
+    if (highscore < score) {
+      highscore = score;
+    }
+    document.getElementById("highscore").innerHTML = highscore;
+  }
+
+  if (heroX <= -150) {
+    gameoverclear();
   }
 
   //Parallax Background
@@ -485,7 +512,7 @@ let update = function () {
   foodX -= 5;
   if (foodX <= 0) {
     foodX = 1100;
-    foodY = 70 + Math.round(Math.random()*(canvas.height - 140));}
+    foodY = 70 + Math.round(Math.random()*(canvas.height - 172));}
 
 
   // random brick move + out of bound
@@ -576,7 +603,7 @@ var render = function () {
     ctx.drawImage(gameoverImage, 0, 100);
   }
  
-  ctx.fillText(`Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 100);
+  if (gameovercheck == false) {document.getElementById("time").innerHTML= elapsedTime};
 };
 
 /**
