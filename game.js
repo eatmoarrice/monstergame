@@ -416,6 +416,8 @@ music.play();
 function pauseMusic() {
   music.pause();
 }
+
+playMusic();
 // reset
 
 function reset() {
