@@ -11,7 +11,6 @@ We also load all of our images.
 
 
 let canvas;
-let hero = {width:80, height: 110}
 let ctx;
 
 canvas = document.createElement("canvas");
@@ -20,10 +19,9 @@ canvas.width = 1000;
 canvas.height = 500;
 document.body.appendChild(canvas);
 
-let bgReady, heroReady, foodReady, brickReady;
-let bgImage, heroImage, foodImage, brickImage;
+let bgReady, heroReady, foodReady, dragonReady;
+let bgImage, heroImage, foodImage, dragonImage;
 let bg2Image, bg3Image, bg4Image, bg5Image, bg6Image, bg7Image, bg3Ready, bg4Ready, bg5Ready, bg6Ready, bg7Ready;
-let tree1Image, tree2Image, tree1Ready, tree2Ready;
 
 let startTime = Date.now();
 const SECONDS_PER_ROUND = 30;
@@ -65,12 +63,12 @@ function loadImages() {
   foodImage.src = "images/food.png";
 
   
-  brickImage = new Image();
-  brickImage.onload = function () {
-    // show the brick image
-    brickReady = true;
+  dragonImage = new Image();
+  dragonImage.onload = function () {
+    // show the dragon image
+    dragonReady = true;
   };
-  brickImage.src ="images/brick2.png";
+  dragonImage.src ="images/dragon.gif";
 
   bg7Image = new Image();
   bg7Image.onload = function () {
@@ -84,8 +82,7 @@ function loadImages() {
     // show the bg6 image
     bg6Ready = true;
   };
-  // bg6Image.src ="images/layer-6.png";
-
+  bg6Image.src ="images/layer-6.png";
   bg5Image = new Image();
   bg5Image.onload = function () {
     // show the bg5 image
@@ -98,92 +95,40 @@ function loadImages() {
     bg4Ready = true;
   };
   bg4Image.src ="images/layer-4.png";
-
   bg3Image = new Image();
   bg3Image.onload = function () {
     // show the bg3 image
     bg3Ready = true;
   };
   bg3Image.src ="images/layer-3.png";
-
-  tree1Image = new Image();
-  tree1Image.onload = function () {
-    // show the bg3 image
-    tree1Ready = true;
-  };
-  tree1Image.src ="images/tree1.png";
-
-  tree2Image = new Image();
-  tree2Image.onload = function () {
-    // show the bg3 image
-    tree2Ready = true;
-  };
-  tree2Image.src ="images/tree2.png";
 }
 
 let state = 0;
-let playerPressedUp = 0;
-let jumpstate = 0;
-let previousDirection = "";
-let obstacleFreeLeft = true;
-let obstacleFreeRight = true;
-let obstacleFreeUp = true;
-let obstacleFreeDown = true;
-let globaldirection = "";
-// let userTyped = "false";
+let userTyped = "false";
 function displayHeroDirection(direction) {
   let heroDirectionLink = "";
-  // if (userTyped == true){state +=1;}
-  state += 1;
+  if (userTyped == true){state +=1;}
   if (state <10) {stateurl = 0;}
   else if (state <20) {stateurl = 1;}
-  heroDirectionLink = `images/hero_walk${stateurl}.png`;
-  if (direction == "up") {playerPressedUp = 1};
-  if (playerPressedUp == 1) {
-    jumpstate +=1;
-    if (jumpstate <16) {
-      jumpstateurl = 0;
-      if (obstacleFreeUp) {heroY -= 12;}
-      else {jumpstate = 16}
-    }
-    else if (jumpstate <34) {
-      jumpstateurl = 1;
-      if (obstacleFreeDown) {heroY += 12;}
-      else { jumpstate = 34}
-    }
-    // if (obstacleFreeDown == false) {jumpstate +=30; playerPressedUp = 0;}
-    if (heroY >322) {heroY = 322}
-    heroDirectionLink = `images/hero_jump${jumpstateurl}.png`;
+  else if (state <30) {stateurl = 2;}
+  else if (state <40) {stateurl = 1;}
+  else if (state <50) {stateurl = 0;}
+  if (direction == "left"){
+    heroDirectionLink = `images/hero_left_${stateurl}.png`
   }
-  else if (obstacleFreeDown == true && heroY < 322) {
-    heroY += 8;
+  if (direction == "right"){
+    heroDirectionLink = `images/hero_right_${stateurl}.png`
   }
-  // else if (state <30) {stateurl = 2;}
-  // else if (state <40) {stateurl = 1;}
-  // else if (state <50) {stateurl = 0;}
-  // if (direction == "left"){
-  //   heroDirectionLink = `images/hero_left_${stateurl}.png`
-  // }
-  // if (direction == "right"){
-  //   heroDirectionLink = `images/hero_right_${stateurl}.png`
-  // }
-  // if (direction == "up"){
-  //   heroDirectionLink = `images/hero_up_${stateurl}.png`
-  // }
-  // if (direction == "down"){
-  //   heroDirectionLink = `images/hero_down_${stateurl}.png`
-  // }
-  if (state == 20){
+  if (direction == "up"){
+    heroDirectionLink = `images/hero_up_${stateurl}.png`
+  }
+  if (direction == "down"){
+    heroDirectionLink = `images/hero_down_${stateurl}.png`
+  }
+  if (state == 50 && userTyped == true){
     state = 0;
   }
-  if (jumpstate >= 33){
-    playerPressedUp = 0;
-    jumpstate = 0;
-    heroDirection = "";
-  }
-  console.log(direction)
-  // userTyped = false;
-  previousDirection = direction;
+  userTyped = false;
   return heroDirectionLink;
 }
 
@@ -227,17 +172,17 @@ let stage = 0; // 0 = beginning, 1 = after transformation, 2 = boss
  * The same applies to the food.
  */
 
-// let heroEvolved = 0;
+let heroEvolved = 0;
 let heroDirection = "down";
 
-let heroX = 50;
-let heroY = 322;
+let heroX = canvas.width / 2;
+let heroY = canvas.height / 2;
 
 let foodX = Math.round(Math.random()*(canvas.width - 32));
 let foodY = Math.round(Math.random()*(canvas.height -32));
 
-let brickX = Math.round(Math.random()*(canvas.width - 120)); // 
-let brickY = 368-128;
+let dragonX = Math.round(Math.random()*(canvas.width - 120)); // fix later
+let dragonY = Math.round(Math.random()*(canvas.height - 120)); // fix later
 
 /** 
  * Keyboard Listeners
@@ -259,41 +204,6 @@ function setupKeyboardListeners() {
 }
 
 
-
-
-
-
-
-// check if anything is in the way
-function checkObstacle(x,width,y,height) {
-  if (((y < heroY) && (heroY < y + height)) || ((y < heroY + hero.height) && (heroY + hero.height < y + height)))  {
-    if ((x + width > heroX + hero.width) && (heroX + hero.width > x)) {obstacleFreeRight = false;}
-    else {obstacleFreeRight = true};
-    if ((heroX + hero.width >= x + width) && (x + width >= heroX)) {obstacleFreeLeft = false}
-    else {obstacleFreeLeft = true};
-  }
-  else {
-    obstacleFreeRight = true;
-    obstacleFreeLeft = true;
-  }
-  
-
-  if (((x <= heroX) && (heroX <= x + width)) || ((x <= heroX + hero.width) && (heroX + hero.width <= x + width))) {
-    if ((y <= heroY) && (heroY <= y + height)) {obstacleFreeUp = false}
-    else {obstacleFreeUp = true};
-    if ((y <= heroY + hero.height) && (heroY + hero.height <= y + height)) {obstacleFreeDown = false}
-    else {obstacleFreeDown = true};
-  }
-  else {
-    obstacleFreeUp = true;
-    obstacleFreeDown = true;
-  }
-  if (heroY >= 322) {obstacleFreeDown = false;}
-  console.log(obstacleFreeRight)
-}
-
-
-
 /**
  *  Update game objects - change player position based on key pressed
  *  and check to see if the food has been caught!
@@ -305,70 +215,72 @@ let bg6X = 0;
 let bg5X = 0;
 let bg4X = 0;
 let bg3X = 0;
-let tree1X = 0;
-let tree2X = 0;
-
 let update = function () {
   // Update the time.
   elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-
-  checkObstacle(brickX, 256, brickY, 64);
+  if (38 in keysDown) { // Player is holding up key
+    userTyped = true;
+    heroDirection = "up";
+    heroY -= 7;
+    if (heroY <= 0 - 48){
+      heroY = canvas.height;
+    }
+  }
   if (40 in keysDown) { // Player is holding down key
     userTyped = true;
     heroDirection = "down";
-     }
+    heroY += 7;
+    if (heroY >= canvas.height){
+      heroY = 0;
+    }
+  }
   if (37 in keysDown) { // Player is holding left key
     userTyped = true;
     heroDirection = "left";
-    if (obstacleFreeLeft){heroX -= 12};
-    if (heroX <= 0){
-      heroX += 12;
+    heroX -= 7;
+    if (heroX <= 0 - 48){
+      heroX = canvas.width;
     }
   }
   if (39 in keysDown) { // Player is holding right key
     userTyped = true;
     heroDirection = "right";
-    if (obstacleFreeRight) {heroX += 7;} else {heroX -=5;}
-    if (heroX + hero.width >= canvas.width){
-      heroX -=7;
+    heroX += 7;
+    if (heroX >= canvas.width){
+      heroX = 0;
     }
   }
-  if (38 in keysDown) { // Player is holding up key
-    userTyped = true;
-    heroDirection = "up";
-  }
-  // else {heroDirection =""}
 
   // Check if player and food collided. Our images
   // are about 32 pixels big.
 
-
+  if (stage == 0) {
     if (
-      heroX <= (foodX + hero.width)
-      && foodX <= (heroX + hero.width)
-      && heroY <= (foodY + hero.height)
-      && foodY <= (heroY + hero.height)
+      heroX <= (foodX + 48)
+      && foodX <= (heroX + 48)
+      && heroY <= (foodY + 48)
+      && foodY <= (heroY + 48)
     ) {
       // Pick a new location for the food.
       // Note: Change this to place the food at a new, random location.
       foodX = Math.round(Math.random()*(canvas.width - 32));
       foodY = Math.round(Math.random()*(canvas.height - 32));
     }
-
-
+}
+  if (stage == 0) {
     if (
-      heroX <= (brickX + 120)
-      && brickX <= (heroX + 48)
-      && heroY <= (brickY + 120)
-      && brickY <= (heroY + 48)
+      heroX <= (dragonX + 120)
+      && dragonX <= (heroX + 48)
+      && heroY <= (dragonY + 120)
+      && dragonY <= (heroY + 48)
     ) {
       // Pick a new location for the food.
       // Note: Change this to place the food at a new, random location.
 
       
-      // brickX = Math.round(Math.random()*(canvas.width - 120));
-      // brickY = Math.round(Math.random()*(canvas.height - 120));
- 
+      dragonX = Math.round(Math.random()*(canvas.width - 120));
+      dragonY = Math.round(Math.random()*(canvas.height - 120));
+    }
   };
 
   //Parallax Background
@@ -376,33 +288,25 @@ let update = function () {
   if (bg7X <= -1000) {bg7X=0}
   bg6X -= 5;
   if (bg6X <= -1000) {bg6X=0}
-  bg5X -= 0.5;
+  bg5X -= 1;
   if (bg5X <= -1000) {bg5X=0}
-  bg4X -= 0.5;
+  bg4X -= 1;
   if (bg4X <= -1000) {bg4X=0}
   bg3X -= 1;
   if (bg3X <= -1000) {bg3X=0}
-  tree1X -= 4;
-  if (tree1X <= (-1200 - (Math.random()*200))) {tree1X=0}
-  tree2X -= 4;
-  if (tree2X <= (-1500 - (Math.random()*500))) {tree2X=0}
-  
 
   // food movement
   foodX -= 5;
   if (foodX <= 0) {foodX=1000}
 
 
-  // random brick move + out of bound
-  // if (brickY > heroY) {brickY -= 3;}
-  // else if (brickY < heroY){brickY += 3};
-  // if (brickX > heroX) {brickX -= 3;}
-  // else if (brickX < heroX) {brickX += 3};
-  brickX -= 5;
-  if (brickX <= -300) {
-    brickX = 900;
-  }
-  // brickX += Math.round((Math.random() + 0.5)*10);
+  // // random dragon move + out of bound
+  // if (dragonY > heroY) {dragonY -= 3;}
+  // else if (dragonY < heroY){dragonY += 3};
+  // if (dragonX > heroX) {dragonX -= 3;}
+  // else if (dragonX < heroX) {dragonX += 3};
+
+  // dragonX += Math.round((Math.random() + 0.5)*10);
 }
   
 
@@ -427,15 +331,6 @@ var render = function () {
     ctx.drawImage(bg5Image, bg5X+1000, 0);
   }
 
-  if (tree1Ready) {
-    ctx.drawImage(tree1Image, tree1X -200, 258);
-    ctx.drawImage(tree1Image, tree1X +1000, 258);
-  }
-  if (tree2Ready) {
-    ctx.drawImage(tree2Image, tree2X - 500, 188);
-    ctx.drawImage(tree2Image, tree2X+ 1200, 188);
-  }
-
   if (bg7Ready) {
     ctx.drawImage(bg7Image, bg7X, 0);
     ctx.drawImage(bg7Image, bg7X+1000, 0);
@@ -455,10 +350,8 @@ var render = function () {
   if (foodReady) {
     ctx.drawImage(foodImage, foodX, foodY);
   }
-  if (brickReady) {
-    ctx.drawImage(brickImage, brickX, brickY);
-    ctx.drawImage(brickImage, brickX+1200, brickY);
-    
+  if (dragonReady) {
+    ctx.drawImage(dragonImage, dragonX, dragonY);
   }
  
   ctx.fillText(`Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 100);
