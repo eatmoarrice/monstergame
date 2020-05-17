@@ -20,16 +20,16 @@ canvas.width = 1000;
 canvas.height = 500;
 document.body.appendChild(canvas);
 
-let bgReady, heroReady, foodReady, brickReady;
+let bgReady, heroReady, foodReady, brickReady, brick2Image, brick2Ready;
 let bgImage, heroImage, foodImage, brickImage;
 let bg2Image, bg3Image, bg4Image, bg5Image, bg6Image, bg7Image, bg3Ready, bg4Ready, bg5Ready, bg6Ready, bg7Ready;
 let tree1Image, tree2Image, tree1Ready, tree2Ready;
-
+let gameover, gameoverImage, gameoverReady;
 let startTime = Date.now();
 const SECONDS_PER_ROUND = 30;
 let elapsedTime = 0;
 
-let names = ["hero_down_0","hero_down_1","hero_down_2","hero_up_0", "hero_up_1", "hero_up_2", "hero_right_0","hero_right_1", "hero_right_2", "hero_left_0", "hero_left_1", "hero_left_2"];
+let names = ["hero_walk0", "hero_walk1", "hero_jump0", "hero_jump1"];
 
 function loadImages() {
   let n,name,
@@ -71,6 +71,13 @@ function loadImages() {
     brickReady = true;
   };
   brickImage.src ="images/brick2.png";
+
+  brick2Image = new Image();
+  brick2Image.onload = function () {
+    // show the brick image
+    brick2Ready = true;
+  };
+  brick2Image.src ="images/brick.png";
 
   bg7Image = new Image();
   bg7Image.onload = function () {
@@ -119,6 +126,13 @@ function loadImages() {
     tree2Ready = true;
   };
   tree2Image.src ="images/tree2.png";
+
+  gameoverImage = new Image();
+  gameoverImage.onload = function () {
+    // show the gameover image
+    gameoverReady = true;
+  };
+  gameoverImage.src ="images/gameover.png";
 }
 
 let state = 0;
@@ -176,12 +190,12 @@ function displayHeroDirection(direction) {
   if (state == 20){
     state = 0;
   }
+  
   if (jumpstate >= 33){
     playerPressedUp = 0;
     jumpstate = 0;
     heroDirection = "";
   }
-  console.log(direction)
   // userTyped = false;
   previousDirection = direction;
   return heroDirectionLink;
@@ -237,7 +251,10 @@ let foodX = Math.round(Math.random()*(canvas.width - 32));
 let foodY = Math.round(Math.random()*(canvas.height -32));
 
 let brickX = Math.round(Math.random()*(canvas.width - 120)); // 
-let brickY = 368-128;
+let brickY = 368;
+
+let brick2X = 1200;
+let brick2Y = Math.round(Math.random()*(canvas.height - 120))
 
 /** 
  * Keyboard Listeners
@@ -266,33 +283,103 @@ function setupKeyboardListeners() {
 
 // check if anything is in the way
 function checkObstacle(x,width,y,height) {
-  if (((y < heroY) && (heroY < y + height)) || ((y < heroY + hero.height) && (heroY + hero.height < y + height)))  {
-    if ((x + width > heroX + hero.width) && (heroX + hero.width > x)) {obstacleFreeRight = false;}
-    else {obstacleFreeRight = true};
-    if ((heroX + hero.width >= x + width) && (x + width >= heroX)) {obstacleFreeLeft = false}
-    else {obstacleFreeLeft = true};
-  }
-  else {
-    obstacleFreeRight = true;
-    obstacleFreeLeft = true;
-  }
+  let tempLeft, tempRight, tempUp, tempDown;
+  // bigloop:
+  // for (let i = heroY; i < heroY + hero.height; i++) {
+  //   for (let z = y; z < y + height; z++) {
+  //       if (z=i) {
+  //         if ((x + width > heroX + hero.width) && (heroX + hero.width > x)) {obstacleFreeRight = false; if (heroY + hero.height > y) {heroY = y - hero.height; obstacleFreeRight = true;}}
+  //         if ((heroX + hero.width > x + width) && (x + width > heroX)) {obstacleFreeLeft = false}
+  //         break bigloop;
+  //       }  
+  //   }
+  //   obstacleFreeRight = true;
+  //   obstacleFreeLeft = true;
+  // }
+
+  // if (hero.height <= height) {
+  //   if (((y < heroY) && (heroY < y + height)) || ((y < heroY + hero.height) && (heroY + hero.height < y + height)))  {
+  //     console.log(y, heroY, heroY + hero.height, y + height  )
+  //     if ((x + width > heroX + hero.width) && (heroX + hero.width > x)) {
+  //       obstacleFreeRight = false;
+  //       if (heroY + hero.height > y) {heroY = y - hero.height; obstacleFreeRight = true;}}
+  //     else {obstacleFreeRight = true};
+  //     if ((heroX + hero.width > x + width) && (x + width > heroX)) {obstacleFreeLeft = false}
+  //     else {obstacleFreeLeft = true};
+  //   }
+  //   else {
+  //     obstacleFreeRight = true;
+  //     obstacleFreeLeft = true;
+  //   }
+  // }
+  // else {}
+
+        // right obstacle
+    if (x <= heroX + hero.width && x + width > heroX + hero.width ) {
+      if (( y < heroY && y + height > heroY ) || (y < heroY + hero.height && y > heroY) ) {
+        tempRight = false;
+        
+      }
+      else {tempRight = true;}
+    }
+    else {tempRight = true;}
+
+    // left obstacle
+    if (x + width >= heroX && x < heroX ) {
+      if (( y  < heroY && y + height > heroY ) || (y < heroY + hero.height && y > heroY) ) {
+        tempLeft = false;
+      }
+      else {tempLeft = true;}
+    }
+    else {tempLeft = true;}
+
+    // else {
+    //   obstacleFreeRight = true;
+    //   obstacleFreeLeft = true;
+    // }
+  
+  
   
 
-  if (((x <= heroX) && (heroX <= x + width)) || ((x <= heroX + hero.width) && (heroX + hero.width <= x + width))) {
-    if ((y <= heroY) && (heroY <= y + height)) {obstacleFreeUp = false}
-    else {obstacleFreeUp = true};
-    if ((y <= heroY + hero.height) && (heroY + hero.height <= y + height)) {obstacleFreeDown = false}
-    else {obstacleFreeDown = true};
+  if (((x < heroX) && (heroX < x + width)) || ((x < heroX + hero.width) && (heroX + hero.width < x + width))) {
+    if ((y < heroY) && (heroY <= y + height)) {tempUp = false}
+    else {tempUp = true};
+    if ((y < heroY + hero.height) && (heroY + hero.height < y + height)) {
+      tempDown = false;
+      if (heroY + hero.height > y) {heroY = y - hero.height + 1; tempRight = true; tempLeft = true;}
+    }
+    else {tempDown = true};
   }
   else {
-    obstacleFreeUp = true;
-    obstacleFreeDown = true;
+    tempUp = true;
+    tempDown = true;
   }
-  if (heroY >= 322) {obstacleFreeDown = false;}
-  console.log(obstacleFreeRight)
+  if (heroY >= 322) {tempDown = false;}
+  let array = [tempLeft, tempRight, tempUp, tempDown];
+  return array;
 }
 
+function checkAllObstacles() {
+  obstacleFreeLeft = true;
+  obstacleFreeRight = true;
+  obstacleFreeDown = true;
+  obstacleFreeUp = true;
 
+   for (let z = 0; z < arguments.length; z++) {
+    if (arguments[z][0] == false) {
+      obstacleFreeLeft = false;
+    }
+    if (arguments[z][1] == false) {
+      obstacleFreeRight = false;
+    }
+    if (arguments[z][2] == false) {
+      obstacleFreeUp = false;
+    }
+    if (arguments[z][3] == false) {
+      obstacleFreeDown = false;
+    }
+  }
+}
 
 /**
  *  Update game objects - change player position based on key pressed
@@ -300,6 +387,7 @@ function checkObstacle(x,width,y,height) {
  *  
  *  If you change the value of 5, the player will move at a different rate.
  */
+let gameovercheck = false;
 let bg7X = 0;
 let bg6X = 0;
 let bg5X = 0;
@@ -312,7 +400,9 @@ let update = function () {
   // Update the time.
   elapsedTime = Math.floor((Date.now() - startTime) / 1000);
 
-  checkObstacle(brickX, 256, brickY, 64);
+  let o1 = checkObstacle(brickX, 256, brickY, 64);
+  let o2 = checkObstacle(brick2X, 64, brick2Y, 64);
+  checkAllObstacles(o1,o2);
   if (40 in keysDown) { // Player is holding down key
     userTyped = true;
     heroDirection = "down";
@@ -328,7 +418,7 @@ let update = function () {
   if (39 in keysDown) { // Player is holding right key
     userTyped = true;
     heroDirection = "right";
-    if (obstacleFreeRight) {heroX += 7;} else {heroX -=5;}
+    if (obstacleFreeRight) {heroX += 7;} 
     if (heroX + hero.width >= canvas.width){
       heroX -=7;
     }
@@ -339,9 +429,8 @@ let update = function () {
   }
   // else {heroDirection =""}
 
-  // Check if player and food collided. Our images
-  // are about 32 pixels big.
-
+  // Check if player and food collided. O
+  if (obstacleFreeRight == false) {heroX -=5;}
 
     if (
       heroX <= (foodX + hero.width)
@@ -351,8 +440,8 @@ let update = function () {
     ) {
       // Pick a new location for the food.
       // Note: Change this to place the food at a new, random location.
-      foodX = Math.round(Math.random()*(canvas.width - 32));
-      foodY = Math.round(Math.random()*(canvas.height - 32));
+      foodX = 1200;
+      foodY = 70 + Math.round(Math.random()*(canvas.height - 140));
     }
 
 
@@ -370,6 +459,10 @@ let update = function () {
       // brickY = Math.round(Math.random()*(canvas.height - 120));
  
   };
+
+  if (heroX <= -150) {
+    gameovercheck = true;
+  }
 
   //Parallax Background
   bg7X -= 5;
@@ -390,7 +483,9 @@ let update = function () {
 
   // food movement
   foodX -= 5;
-  if (foodX <= 0) {foodX=1000}
+  if (foodX <= 0) {
+    foodX = 1100;
+    foodY = 70 + Math.round(Math.random()*(canvas.height - 140));}
 
 
   // random brick move + out of bound
@@ -402,6 +497,16 @@ let update = function () {
   if (brickX <= -300) {
     brickX = 900;
   }
+
+  brick2X -= 5;
+  if (brick2X <= -300) {
+    brick2Y = Math.round(Math.random()*(canvas.height - 120))
+    while (brick2Y < brickY && brick2Y + 64 > brickY) {
+      brick2Y = Math.round(Math.random()*(canvas.height - 120))
+    }
+    brick2X = 1200;
+  }
+
   // brickX += Math.round((Math.random() + 0.5)*10);
 }
   
@@ -419,8 +524,8 @@ var render = function () {
     ctx.drawImage(bg3Image, bg3X+1000, 0);
   }
   if (bg4Ready) {
-    ctx.drawImage(bg4Image, bg4X-50, 0);
-    ctx.drawImage(bg4Image, bg4X+950,0);
+    ctx.drawImage(bg4Image, bg4X, 0);
+    ctx.drawImage(bg4Image, bg4X +1000,0);
   }
   if (bg5Ready) {
     ctx.drawImage(bg5Image, bg5X, 0);
@@ -459,6 +564,16 @@ var render = function () {
     ctx.drawImage(brickImage, brickX, brickY);
     ctx.drawImage(brickImage, brickX+1200, brickY);
     
+  }
+
+  if (brick2Ready) {
+    ctx.drawImage(brick2Image, brick2X, brick2Y);
+    // ctx.drawImage(brick2Image, brick2X+1200, brick2Y);
+    
+  }
+
+  if (gameovercheck && gameoverReady) {
+    ctx.drawImage(gameoverImage, 0, 100);
   }
  
   ctx.fillText(`Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 100);
