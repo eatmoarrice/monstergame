@@ -382,6 +382,20 @@ function checkAllObstacles() {
   }
 }
 
+// music
+
+let music = new Audio("audio/8bitattempt.ogg");
+function playMusic() {
+  music.addEventListener('ended', function() {
+    this.currentTime = 0;
+    this.play();
+}, false);
+music.play();
+}
+
+function pauseMusic() {
+  music.pause();
+}
 // reset
 
 function reset() {
