@@ -248,6 +248,7 @@ let stage = 0; // 0 = beginning, 1 = after transformation, 2 = boss
  */
 
 // let heroEvolved = 0;
+let speed = 0;
 let heroDirection = "down";
 
 let heroX = 50;
@@ -473,17 +474,17 @@ let update = function () {
   if (37 in keysDown) { // Player is holding left key
     userTyped = true;
     heroDirection = "left";
-    if (obstacleFreeLeft){heroX -= 7};
+    if (obstacleFreeLeft){heroX -= 7 + speed};
     if (heroX <= 0){
-      heroX += 7;
+      heroX += 7 + speed;
     }
   }
   if (39 in keysDown) { // Player is holding right key
     userTyped = true;
     // heroDirection = "right";/
-    if (obstacleFreeRight) {heroX += 7;} 
+    if (obstacleFreeRight) {heroX += 7 + speed;} 
     if (heroX + hero.width >= canvas.width){
-      heroX -=7;
+      heroX -=7 + speed;
     }
   }
   if (38 in keysDown) { // Player is holding up key
@@ -538,12 +539,12 @@ let update = function () {
     gameoverclear();
   }
 
-  heroX -= 5;
+  heroX -= 5 + speed;
 
   //Parallax Background
-  bg7X -= 5;
+  bg7X -= 5  + speed;
   if (bg7X <= -1000) {bg7X=0}
-  bg6X -= 5;
+  bg6X -= 5 +speed;
   if (bg6X <= -1000) {bg6X=0}
   bg5X -= 0.5;
   if (bg5X <= -1000) {bg5X=0}
@@ -551,14 +552,14 @@ let update = function () {
   if (bg4X <= -1000) {bg4X=0}
   bg3X -= 1;
   if (bg3X <= -1000) {bg3X=0}
-  tree1X -= 4;
+  tree1X -= 4 + speed;
   if (tree1X <= (-1200 - (Math.random()*200))) {tree1X=0}
-  tree2X -= 4;
+  tree2X -= 4 + speed;
   if (tree2X <= (-1500 - (Math.random()*500))) {tree2X=0}
   
 
   // food movement
-  foodX -= 5;
+  foodX -= 5 + speed;
   if (foodX <= 0) {
     foodX = 1100;
     foodY = 70 + Math.round(Math.random()*(canvas.height - 172));}
@@ -569,12 +570,12 @@ let update = function () {
   // else if (brickY < heroY){brickY += 3};
   // if (brickX > heroX) {brickX -= 3;}
   // else if (brickX < heroX) {brickX += 3};
-  brickX -= 5;
+  brickX -= 5 + speed;
   if (brickX <= -300) {
     brickX = 900;
   }
 
-  brick2X -= 5;
+  brick2X -= 5 + speed;
   if (brick2X <= -300) {
     brick2Y = 48 + Math.round(Math.random() * 5) * 64;
     while (brick2Y < brickY && brick2Y + 64 > brickY) {
@@ -653,6 +654,7 @@ var render = function () {
   }
  
   if (gameovercheck == false) {document.getElementById("time").innerHTML= elapsedTime};
+  speed = elapsedTime/6;
 };
 
 /**
