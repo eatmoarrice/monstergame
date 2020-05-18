@@ -52,12 +52,14 @@ function loadImages() {
     bgReady = true;
   };
   bgImage.src = "images/layer-1.png";
+
   heroImage = new Image();
   heroImage.onload = function () {
     // show the hero image
-    heroReady = true;
+    // heroReady = true;
   };
   heroImage.src = "images/hero_down_0.png";
+
   foodImage = new Image();
   foodImage.onload = function () {
     // show the food image
