@@ -58,7 +58,7 @@ function loadImages() {
     // show the hero image
     // heroReady = true;
   };
-  heroImage.src = "images/hero_down_0.png";
+  // heroImage.src = "images/hero_down_0.png";
 
   foodImage = new Image();
   foodImage.onload = function () {
@@ -465,7 +465,7 @@ let update = function () {
 
   if (gameovercheck == false) {if (40 in keysDown) { // Player is holding down key
     userTyped = true;
-    heroDirection = "down";
+    // heroDirection = "down";
      }
   if (37 in keysDown) { // Player is holding left key
     userTyped = true;
