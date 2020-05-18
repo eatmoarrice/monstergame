@@ -147,11 +147,12 @@ let obstacleFreeRight = true;
 let obstacleFreeUp = true;
 let obstacleFreeDown = true;
 let globaldirection = "";
-// let userTyped = "false";
+let userTyped = "false";
 function displayHeroDirection(direction) {
   let heroDirectionLink = "";
-  // if (userTyped == true){state +=1;}
-  state += 1;
+  if (userTyped == true){state +=1;}
+  // state += 1;  
+  
   if (state <10) {stateurl = 0;}
   else if (state <20) {stateurl = 1;}
   heroDirectionLink = `images/hero_walk${stateurl}.png`;
@@ -175,6 +176,8 @@ function displayHeroDirection(direction) {
   else if (obstacleFreeDown == true && heroY < 322) {
     heroY += 8;
   }
+
+  if (userTyped == false) {heroDirectionLink = `images/hero_jump2.png`;} //idle pose
   // else if (state <30) {stateurl = 2;}
   // else if (state <40) {stateurl = 1;}
   // else if (state <50) {stateurl = 0;}
@@ -199,7 +202,7 @@ function displayHeroDirection(direction) {
     jumpstate = 0;
     heroDirection = "";
   }
-  // userTyped = false;
+  userTyped = false;
   previousDirection = direction;
   return heroDirectionLink;
 }
@@ -469,15 +472,15 @@ let update = function () {
      }
   if (37 in keysDown) { // Player is holding left key
     userTyped = true;
-    // heroDirection = "left";
-    if (obstacleFreeLeft){heroX -= 12};
+    heroDirection = "left";
+    if (obstacleFreeLeft){heroX -= 7};
     if (heroX <= 0){
-      heroX += 12;
+      heroX += 7;
     }
   }
   if (39 in keysDown) { // Player is holding right key
     userTyped = true;
-    // heroDirection = "right";
+    // heroDirection = "right";/
     if (obstacleFreeRight) {heroX += 7;} 
     if (heroX + hero.width >= canvas.width){
       heroX -=7;
@@ -534,6 +537,8 @@ let update = function () {
   if (heroX <= -150) {
     gameoverclear();
   }
+
+  heroX -= 5;
 
   //Parallax Background
   bg7X -= 5;
