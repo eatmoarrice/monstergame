@@ -190,7 +190,7 @@ function displayHeroDirection(direction) {
   // if (direction == "down"){
   //   heroDirectionLink = `images/hero_down_${stateurl}.png`
   // }
-  if (state == 20){
+  if (state >= 20){
     state = 0;
   }
   
