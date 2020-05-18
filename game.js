@@ -469,7 +469,7 @@ let update = function () {
      }
   if (37 in keysDown) { // Player is holding left key
     userTyped = true;
-    heroDirection = "left";
+    // heroDirection = "left";
     if (obstacleFreeLeft){heroX -= 12};
     if (heroX <= 0){
       heroX += 12;
@@ -477,7 +477,7 @@ let update = function () {
   }
   if (39 in keysDown) { // Player is holding right key
     userTyped = true;
-    heroDirection = "right";
+    // heroDirection = "right";
     if (obstacleFreeRight) {heroX += 7;} 
     if (heroX + hero.width >= canvas.width){
       heroX -=7;
