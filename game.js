@@ -629,9 +629,10 @@ var render = function () {
   }
 
   
-  heroImage.src = displayHeroDirection(heroDirection);
+ 
  
   if (heroReady) {
+    heroImage.src = displayHeroDirection(heroDirection);
     ctx.drawImage(heroImage, heroX, heroY);
   }
   if (foodReady) {
@@ -654,7 +655,7 @@ var render = function () {
   }
  
   if (gameovercheck == false) {document.getElementById("time").innerHTML= elapsedTime};
-  speed = elapsedTime/6;
+  if (speed < 30) {speed = elapsedTime/6;}
 };
 
 /**
